@@ -130,6 +130,21 @@ function has_apt_get {
   [ -n "$(command -v apt-get)" ]
 }
 
+function install_awscli {
+  local readonly download_path="/tmp/get-pip.py"
+  local readonly url="https://bootstrap.pypa.io/get-pip.py"
+
+  log "INFO" "Downloading pip from $url to $download_path"
+  curl -o "$download_path" "$url"
+
+  log "INFO" "installing pip from $download_path"
+  sudo python $download_path
+  two_way_symlink "/usr/bin/pip" "/usr/local/bin/pip"
+  sudo pip install awscli --upgrade
+  two_way_symlink "/usr/bin/aws" "/usr/local/bin/aws"
+}
+
+
 function install_dependencies {
   log_info "Installing dependencies"
 
@@ -140,6 +155,7 @@ function install_dependencies {
   elif $(has_yum); then
     sudo yum update -y
     sudo yum install -y aws curl unzip jq
+    install_awscli
     install_supervisord_amazon_linux
   else
     log_error "Could not find apt-get or yum. Cannot install dependencies on this OS."
