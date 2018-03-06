@@ -241,7 +241,7 @@ function generate_supervisor_config {
   log_info "Creating Supervisor config file to run Consul in $supervisor_config_path"
   cat > "$supervisor_config_path" <<EOF
 [program:consul]
-command=$consul_bin_dir/consul agent -config-dir $consul_config_dir -data-dir $consul_data_dir
+command=$consul_bin_dir/consul agent -config-dir $consul_config_dir -data-dir $consul_data_dir -domain inner-route.com
 stdout_logfile=$consul_log_dir/consul-stdout.log
 stderr_logfile=$consul_log_dir/consul-error.log
 numprocs=1
